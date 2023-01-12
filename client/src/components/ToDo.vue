@@ -41,6 +41,10 @@ export default {
         this.todoList = data;
       });
     },
+    // toggle che prende come parametro un elemento dell'elenco e inverte il valore della proprietà "completed
+    toggleCompleted(todoElem) {
+      todoElem.completed = !todoElem.completed;
+    },
   },
   // la funzione viene chiamata quando il componente viene montato
   mounted() {
@@ -57,6 +61,7 @@ export default {
       <li
         v-for="(todoElem, ind) in todoList"
         :key="ind"
+        @click="toggleCompleted(todoElem)"
         :class="{ taskCompleted: todoElem.completed }"
       >
         {{ todoElem.text }}
@@ -93,6 +98,7 @@ ul {
 li {
   display: inline-block;
   margin: 0 10px;
+  cursor: pointer;
 }
 a {
   color: #42b983;
