@@ -27,8 +27,25 @@ export default {
       };
 
       // invia una richiesta GET al server all'URL specificato dalla costante "ApiUrl" più "TaskCreateApi.php" e passano i parametri definiti
-      axios.get(ApiUrl + "TaskCreateApi.php", params).then(() => {});
+      axios.get(ApiUrl + "TaskCreateApi.php", params).then(() => {
+        // una volta che la richiesta è stata completata, richiama il metodo "getAllData" per recuperare la lista dei todo dal server
+        this.getAllData();
+      });
     },
+    // metodo con un'altra richiesta GET per recuperare la lista dei todo
+    getAllData() {
+      axios.get(ApiUrl + "TaskReadApi.php").then((res) => {
+        // assegna la proprietà "data" dell'oggetto "res" (che contiene la risposta del server) a una costante "data"
+        const data = res.data;
+        // assegna i dati restituiti dal server alla proprietà "todoList" del componente.
+        this.todoList = data;
+      });
+    },
+  },
+  // la funzione viene chiamata quando il componente viene montato
+  mounted() {
+    // recupera la lista dei todo dal server una volta che il componente è montato
+    this.getAllData();
   },
 };
 </script>
