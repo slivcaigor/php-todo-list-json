@@ -1,12 +1,74 @@
-<script></script>
+<script>
+// importo libreria axios per efettuare richieste HTTP
+import axios from "axios";
+// constante che contine l'URL con cui comunica il componente
+const ApiUrl = "http://localhost/";
+
+export default {
+  data() {
+    return {
+      // restituisce un oggetto con i dati del componente
+      newTodo: "",
+      // array vuoto per contenere la lista dei todo restituita dal server
+      todoList: [],
+    };
+  },
+  methods: {
+    // al invio del modulo da parte del utente
+    formSubmit(e) {
+      // previene la ricarica della pagina
+      e.preventDefault();
+      // viene creato un oggetto "params" utilizzato per passare i parametri alla richiesta get
+      const params = {
+        // un parametro "newTodo" con il valore di "this.newTodo", ovvero la proprietà del componente contenente il nuovo todo
+        params: {
+          newTodo: this.newTodo,
+        },
+      };
+
+      // invia una richiesta GET al server all'URL specificato dalla costante "ApiUrl" più "TaskCreateApi.php" e passano i parametri definiti
+      axios.get(ApiUrl + "TaskCreateApi.php", params).then(() => {});
+    },
+  },
+};
+</script>
 
 <template>
-  <h1>Ciao Mondo</h1>
+  <div>
+    <h1>Ciao Mondo</h1>
+    <ul>
+      <li v-for="(todoElem, ind) in todoList" :key="ind">
+        {{ todoElem.text }}
+      </li>
+    </ul>
+    <form @submit="formSubmit">
+      <input type="text" name="newTodo" v-model="newTodo" />
+      <input type="submit" value="CREATE" />
+    </form>
+  </div>
 </template>
 
 <style lang="scss" scoped>
+@use "../styles/general.scss" as *;
+@use "../styles/partials/mixins" as *;
+@use "../styles/partials/variables" as *;
 h1 {
   color: #888;
   font-size: 100px;
+}
+
+h3 {
+  margin: 40px 0 0;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+a {
+  color: #42b983;
 }
 </style>
