@@ -54,7 +54,11 @@ export default {
   <div>
     <h1>Ciao Mondo</h1>
     <ul>
-      <li v-for="(todoElem, ind) in todoList" :key="ind">
+      <li
+        v-for="(todoElem, ind) in todoList"
+        :key="ind"
+        :class="{ taskCompleted: todoElem.completed }"
+      >
         {{ todoElem.text }}
       </li>
     </ul>
@@ -69,6 +73,11 @@ export default {
 @use "../styles/general.scss" as *;
 @use "../styles/partials/mixins" as *;
 @use "../styles/partials/variables" as *;
+
+.taskCompleted {
+  text-decoration: line-through;
+}
+
 h1 {
   color: #888;
   font-size: 100px;
