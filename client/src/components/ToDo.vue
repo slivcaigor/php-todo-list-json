@@ -14,6 +14,11 @@ export default {
     };
   },
   methods: {
+    deleteTask(index) {
+      axios.get(ApiUrl + "TaskDeleteApi.php?index=" + index).then(() => {
+        this.getAllData();
+      });
+    },
     // al invio del modulo da parte del utente
     formSubmit(e) {
       // previene la ricarica della pagina
@@ -29,6 +34,7 @@ export default {
       // invia una richiesta GET al server all'URL specificato dalla costante "ApiUrl" più "TaskCreateApi.php" e passano i parametri definiti
       axios.get(ApiUrl + "TaskCreateApi.php", params).then(() => {
         // una volta che la richiesta è stata completata, richiama il metodo "getAllData" per recuperare la lista dei todo dal server
+        this.newTodo = "";
         this.getAllData();
       });
     },
@@ -65,6 +71,7 @@ export default {
         :class="{ taskCompleted: todoElem.completed }"
       >
         {{ todoElem.text }}
+        <button @click="deleteTask(ind)">Elimina</button>
       </li>
     </ul>
     <form @submit="formSubmit">
