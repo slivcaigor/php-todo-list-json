@@ -1,60 +1,65 @@
 <script>
-// importo libreria axios per efettuare richieste HTTP
 import axios from "axios";
-// constante che contine l'URL con cui comunica il componente
 const ApiUrl = "http://localhost/";
 
 export default {
   data() {
     return {
-      // restituisce un oggetto con i dati del componente
       newTodo: "",
-      // array vuoto per contenere la lista dei todo restituita dal server
       todoList: [],
     };
   },
   methods: {
-    deleteTask(index) {
-      axios.get(ApiUrl + "TaskDeleteApi.php?index=" + index).then(() => {
-        this.getAllData();
-      });
+    toggleTaskCompleted(id) {
+      axios
+        .get(ApiUrl + "TaskCompletedApi.php?id=" + id)
+        .then(() => {
+          this.getAllData();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
-    // al invio del modulo da parte del utente
+    deleteTask(id) {
+      axios
+        .get(ApiUrl + "TaskDeleteApi.php?id=" + id)
+        .then(() => {
+          this.getAllData();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
     formSubmit(e) {
-      // previene la ricarica della pagina
       e.preventDefault();
-      // viene creato un oggetto "params" utilizzato per passare i parametri alla richiesta get
       const params = {
-        // un parametro "newTodo" con il valore di "this.newTodo", ovvero la proprietà del componente contenente il nuovo todo
         params: {
           newTodo: this.newTodo,
         },
       };
-
-      // invia una richiesta GET al server all'URL specificato dalla costante "ApiUrl" più "TaskCreateApi.php" e passano i parametri definiti
-      axios.get(ApiUrl + "TaskCreateApi.php", params).then(() => {
-        // una volta che la richiesta è stata completata, richiama il metodo "getAllData" per recuperare la lista dei todo dal server
-        this.newTodo = "";
-        this.getAllData();
-      });
+      axios
+        .get(ApiUrl + "TaskCreateApi.php", params)
+        .then(() => {
+          this.newTodo = "";
+          this.getAllData();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
-    // metodo con un'altra richiesta GET per recuperare la lista dei todo
     getAllData() {
-      axios.get(ApiUrl + "TaskReadApi.php").then((res) => {
-        // assegna la proprietà "data" dell'oggetto "res" (che contiene la risposta del server) a una costante "data"
-        const data = res.data;
-        // assegna i dati restituiti dal server alla proprietà "todoList" del componente.
-        this.todoList = data;
-      });
-    },
-    // toggle che prende come parametro un elemento dell'elenco e inverte il valore della proprietà "completed
-    toggleCompleted(todoElem) {
-      todoElem.completed = !todoElem.completed;
+      axios
+        .get(ApiUrl + "TaskReadApi.php")
+        .then((res) => {
+          const data = res.data;
+          this.todoList = data;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
   },
-  // la funzione viene chiamata quando il componente viene montato
   mounted() {
-    // recupera la lista dei todo dal server una volta che il componente è montato
     this.getAllData();
   },
 };
@@ -67,11 +72,11 @@ export default {
       <li
         v-for="(todoElem, ind) in todoList"
         :key="ind"
-        @click="toggleCompleted(todoElem)"
         :class="{ taskCompleted: todoElem.completed }"
+        @click="toggleTaskCompleted(todoElem.id)"
       >
         {{ todoElem.text }}
-        <button @click="deleteTask(ind)">Elimina</button>
+        <button @click="deleteTask(todoElem.id)">Elimina</button>
       </li>
     </ul>
     <form @submit="formSubmit">
