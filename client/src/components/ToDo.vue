@@ -17,7 +17,7 @@ export default {
           this.getAllData();
         })
         .catch((e) => {
-          console.log(e);
+          console.e(e);
         });
     },
     deleteTask(id) {
